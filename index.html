@@ -399,6 +399,68 @@
             font-weight: 700;
         }
 
+        .race-car-select {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+
+        .race-car-button {
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.08);
+            color: var(--white);
+            border-radius: 999px;
+            padding: 1rem 0.7rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .race-car-button.selected {
+            border-color: var(--cyan);
+            box-shadow: 0 10px 30px rgba(73,197,182,0.18);
+        }
+
+        .race-track {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .race-lane {
+            position: relative;
+            min-height: 70px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .race-label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--grey);
+            z-index: 1;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .race-car {
+            height: 100%;
+            width: 0%;
+            border-radius: 20px;
+            transition: width 0.1s ease;
+            filter: drop-shadow(0 12px 20px rgba(0,0,0,0.15));
+        }
+
+        .race-start-status {
+            color: var(--cyan);
+            font-size: 0.95rem;
+            margin-top: 0.75rem;
+        }
+
 
         .memory-card.flipped .memory-card-inner {
             transform: rotateY(180deg);
@@ -505,6 +567,7 @@
                 <ul>
                     <li><a href="#games">Jogos</a></li>
                     <li><a href="#memory">Memória</a></li>
+                    <li><a href="#race">Corrida</a></li>
                     <li><a href="#features">Destaques</a></li>
                     <li><a href="#contact">Contato</a></li>
                 </ul>
@@ -517,7 +580,8 @@
                     <h1>O melhor portal de jogos para jogar, explorar e se divertir.</h1>
                     <p>Descubra aventuras incríveis, desafios rápidos e jogos exclusivos. Tudo em um só lugar, com design moderno e experiência intuitiva.</p>
                     <div class="hero-buttons">
-                        <button class="button-primary" onclick="document.getElementById('memory').scrollIntoView({ behavior: 'smooth' })">Jogar Agora</button>
+                        <button class="button-primary" onclick="document.getElementById('race').scrollIntoView({ behavior: 'smooth' })">Jogar Corrida</button>
+                        <button class="button-secondary" onclick="document.getElementById('memory').scrollIntoView({ behavior: 'smooth' })">Jogar Memória</button>
                         <button class="button-secondary" onclick="document.getElementById('games').scrollIntoView({ behavior: 'smooth' })">Ver Jogos</button>
                     </div>
                 </div>
@@ -582,6 +646,47 @@
                             </div>
                         </div>
                     </article>
+                    <article class="game-card">
+                        <div class="game-top">
+                            <h3>Corrida de Carros</h3>
+                            <p>Escolha seu carro e dispute uma corrida de 4 competidores.</p>
+                        </div>
+                        <div class="game-body">
+                            <p>Selecione o seu tipo de carro favorito e veja quem chega primeiro na linha de chegada.</p>
+                            <div class="game-meta">
+                                <span class="badge">Corrida</span>
+                                <a href="#race" class="game-link">Jogar</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="race" class="hangman-section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Corrida de Carros</h2>
+                    </div>
+                    <p>Escolha um dos 4 tipos de carro e dispute uma corrida emocionante. Quem cruzar a linha de chegada primeiro vence.</p>
+                </div>
+                <div class="memory-info">
+                    <div class="memory-panel">
+                        <div>
+                            <span>Carro escolhido: <strong id="raceSelected">Fórmula</strong></span>
+                            <span style="margin-left: 1.5rem;">Tempo de corrida: <strong id="raceResult">Aguardando...</strong></span>
+                        </div>
+                        <button class="button-primary" id="raceStart">Iniciar Corrida</button>
+                    </div>
+                    <div class="hangman-board">
+                        <div class="hangman-message" id="raceMessage"></div>
+                        <div class="race-car-select" id="raceCarSelect"></div>
+                        <div class="race-track" id="raceTrack">
+                            <div class="race-lane" data-car="Fórmula"><span class="race-label">Fórmula</span><div class="race-car"></div></div>
+                            <div class="race-lane" data-car="Muscle"><span class="race-label">Muscle</span><div class="race-car"></div></div>
+                            <div class="race-lane" data-car="Rally"><span class="race-label">Rally</span><div class="race-car"></div></div>
+                            <div class="race-lane" data-car="Elétrico"><span class="race-label">Elétrico</span><div class="race-car"></div></div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -668,6 +773,77 @@
         const hangmanChances = document.getElementById('hangmanChances');
         const hangmanRestart = document.getElementById('hangmanRestart');
 
+        const raceCarSelect = document.getElementById('raceCarSelect');
+        const raceStartButton = document.getElementById('raceStart');
+        const raceMessage = document.getElementById('raceMessage');
+        const raceTrack = document.getElementById('raceTrack');
+        const raceSelected = document.getElementById('raceSelected');
+
+        const raceCars = [
+            { name: 'Fórmula', color: '#557eff' },
+            { name: 'Muscle', color: '#ff6b6b' },
+            { name: 'Rally', color: '#49c5b6' },
+            { name: 'Elétrico', color: '#f7df1e' }
+        ];
+
+        let chosenCar = raceCars[0].name;
+        let raceInProgress = false;
+
+        function initRaceControls() {
+            raceCarSelect.innerHTML = raceCars
+                .map(car => `
+                    <button class="letter-button race-car-button" type="button" data-car="${car.name}" style="background:${car.color};">
+                        ${car.name}
+                    </button>
+                `).join('');
+
+            raceCarSelect.querySelectorAll('.race-car-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    if (raceInProgress) return;
+                    chosenCar = button.dataset.car;
+                    raceSelected.textContent = chosenCar;
+                    raceMessage.textContent = `Você escolheu: ${chosenCar}. Pronto para correr!`;
+                    raceCarSelect.querySelectorAll('.race-car-button').forEach(btn => btn.classList.remove('selected'));
+                    button.classList.add('selected');
+                });
+            });
+            raceCarSelect.querySelector('.race-car-button').classList.add('selected');
+            raceMessage.textContent = `Escolha um carro para competir.`;
+        }
+
+        function startRace() {
+            if (raceInProgress) return;
+            raceInProgress = true;
+            raceStartButton.disabled = true;
+            raceMessage.textContent = `Corrida iniciada!`;
+            raceSelected.textContent = chosenCar;
+            raceTrack.querySelectorAll('.race-lane .race-car').forEach((car, index) => {
+                car.style.width = '0%';
+                car.style.background = raceCars[index].color;
+            });
+
+            let winner = null;
+            const interval = setInterval(() => {
+                raceTrack.querySelectorAll('.race-lane').forEach((lane, index) => {
+                    const car = lane.querySelector('.race-car');
+                    const currentWidth = parseFloat(car.style.width);
+                    const baseSpeed = Math.random() * 3 + 0.5;
+                    const boost = lane.dataset.car === chosenCar ? 1.2 : 0;
+                    const nextWidth = Math.min(100, currentWidth + baseSpeed + boost);
+                    car.style.width = `${nextWidth}%`;
+                    if (!winner && nextWidth >= 100) {
+                        winner = lane.dataset.car;
+                    }
+                });
+                if (winner) {
+                    clearInterval(interval);
+                    raceInProgress = false;
+                    raceStartButton.disabled = false;
+                    raceMessage.textContent = winner === chosenCar ? `Você venceu com o ${winner}!` : `O ${winner} venceu. Tente outra vez!`;
+                    raceSelected.textContent = chosenCar;
+                }
+            }, 80);
+        }
 
         function shuffle(array) {
             return array.sort(() => Math.random() - 0.5);
@@ -831,10 +1007,12 @@
         }
 
         hangmanRestart.addEventListener('click', chooseHangmanWord);
+        raceStartButton.addEventListener('click', startRace);
         restart.addEventListener('click', resetGame);
         setupBoard();
         startTimer();
         chooseHangmanWord();
+        initRaceControls();
     </script>
 </body>
 </html>
