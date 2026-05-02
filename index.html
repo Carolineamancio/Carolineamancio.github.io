@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Jogos | Caroline</title>
+    <style>
+        :root {
+            --dark: #0b1320;
+            --navy: #1f2a44;
+            --blue: #557eff;
+            --blue-soft: #7c8cff;
+            --cyan: #49c5b6;
+            --white: #f9fbff;
+            --grey: #a2aecf;
+            --shadow: rgba(6, 20, 43, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(180deg, #0b1320 0%, #131a32 100%);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(84, 160, 255, 0.12), transparent 25%),
+                        radial-gradient(circle at bottom right, rgba(73, 197, 182, 0.14), transparent 22%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            width: min(1180px, calc(100% - 2rem));
+            margin: 0 auto;
+            padding: 2.5rem 0 4rem;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+
+        .brand span {
+            display: inline-flex;
+            width: 42px;
+            height: 42px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            color: var(--grey);
+            font-size: 0.95rem;
+        }
+
+        nav a {
+            color: var(--grey);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--white);
+        }
+
+        .hero {
+            margin-top: 3rem;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .hero-text {
+            max-width: 620px;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.8rem, 4vw, 4.4rem);
+            line-height: 0.98;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .hero-text p {
+            color: var(--grey);
+            font-size: 1.05rem;
+            line-height: 1.9;
+            margin-bottom: 1.8rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .button-primary,
+        .button-secondary {
+            padding: 1rem 1.8rem;
+            border-radius: 999px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            color: var(--dark);
+            box-shadow: 0 20px 40px rgba(37, 137, 255, 0.2);
+        }
+
+        .button-secondary {
+            background: rgba(255,255,255,0.06);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .button-primary:hover,
+        .button-secondary:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            backdrop-filter: blur(20px);
+        }
+
+        .hero-card .card-title {
+            font-size: 1rem;
+            color: var(--cyan);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .hero-card h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            max-width: 14rem;
+        }
+
+        .hero-card .stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .stat {
+            padding: 1rem;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 1.6rem;
+            margin-bottom: 0.4rem;
+            color: var(--white);
+        }
+
+        .stat span {
+            color: var(--grey);
+            font-size: 0.95rem;
+        }
+
+        .games-grid {
+            margin-top: 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .game-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 28px;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.18);
+        }
+
+        .game-top {
+            position: relative;
+            min-height: 200px;
+            background: linear-gradient(135deg, rgba(85,126,255,0.95), rgba(73,197,182,0.95));
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+            color: var(--white);
+        }
+
+        .game-top::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(255,255,255,0.22), transparent 24%);
+            pointer-events: none;
+        }
+
+        .game-top h3 {
+            position: relative;
+            z-index: 1;
+            font-size: 1.55rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .game-top p {
+            position: relative;
+            z-index: 1;
+            color: rgba(255,255,255,0.85);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .game-body {
+            padding: 1.5rem;
+        }
+
+        .game-body p {
+            color: var(--grey);
+            line-height: 1.8;
+            margin-bottom: 1.4rem;
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.55rem 0.85rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            color: var(--white);
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+        }
+
+        .game-link {
+            color: var(--blue);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .featured-games {
+            margin-top: 5rem;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .section-heading h2 {
+            font-size: clamp(2rem, 3vw, 2.6rem);
+            max-width: 650px;
+        }
+
+        .section-heading p {
+            color: var(--grey);
+            max-width: 540px;
+            line-height: 1.8;
+        }
+
+        footer {
+            padding: 2.5rem 0 1rem;
+            text-align: center;
+            color: var(--grey);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 860px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-card {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 560px) {
+            nav ul {
+                display: none;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .game-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="brand">
+                <span>🎮</span>
+                <div>
+                    <div>Portal de Jogos</div>
+                    <small style="color: var(--grey); font-size: 0.8rem;">Caroline Amancio</small>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#games">Jogos</a></li>
+                    <li><a href="#features">Destaques</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="hero-text">
+                    <h1>O melhor portal de jogos para jogar, explorar e se divertir.</h1>
+                    <p>Descubra aventuras incríveis, desafios rápidos e jogos exclusivos. Tudo em um só lugar, com design moderno e experiência intuitiva.</p>
+                    <div class="hero-buttons">
+                        <button class="button-primary">Jogar Agora</button>
+                        <button class="button-secondary">Ver Jogos</button>
+                    </div>
+                </div>
+                <aside class="hero-card">
+                    <div class="card-title">Jogo em destaque</div>
+                    <h2>Galaxy Runner</h2>
+                    <div class="stats">
+                        <div class="stat">
+                            <strong>4.9 / 5</strong>
+                            <span>Avaliação média</span>
+                        </div>
+                        <div class="stat">
+                            <strong>28K</strong>
+                            <span>Jogadores ativos</span>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+
+            <section id="games" class="featured-games">
+                <div class="section-heading">
+                    <div>
+                        <h2>Jogos populares</h2>
+                    </div>
+                    <p>Explore games rápidos, desafios multiplayer e aventuras casuais pensadas para todos os estilos.</p>
+                </div>
+
+                <div class="games-grid">
+                    <article class="game-card">
+                        <div class="game-top">
+                            <h3>Cyber Drift</h3>
+                            <p>Corrida futurista em neon com pistas dinâmicas e carros customizáveis.</p>
+                        </div>
+                        <div class="game-body">
+                            <p>Domine cada curva em um circuito cheio de obstáculos e rivalidades. Perfeito para quem gosta de velocidade e ritmo acelerado.</p>
+                            <div class="game-meta">
+                                <span class="badge">Corrida</span>
+                                <a href="#" class="game-link">Jogar</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="game-card">
+                        <div class="game-top">
+                            <h3>Mystic Quest</h3>
+                            <p>Aventure-se em uma jornada mágica repleta de mistérios e desafios.</p>
+                        </div>
+                        <div class="game-body">
+                            <p>Explore florestas encantadas, resolva enigmas antigos e lute contra criaturas místicas para salvar o reino.</p>
+                            <div class="game-meta">
+                                <span class="badge">Aventura</span>
+                                <a href="#" class="game-link">Jogar</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="game-card">
+                        <div class="game-top">
+                            <h3>Pixel Hero</h3>
+                            <p>Clássico arcade com ação rápida e desafios cativantes.</p>
+                        </div>
+                        <div class="game-body">
+                            <p>Salte, corra e derrote inimigos em um estilo retrô cheio de efeitos sonoros nostálgicos.</p>
+                            <div class="game-meta">
+                                <span class="badge">Arcade</span>
+                                <a href="#" class="game-link">Jogar</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="game-card">
+                        <div class="game-top">
+                            <h3>Brain Blitz</h3>
+                            <p>Teste sua mente com quizzes, puzzles e desafios de lógica.</p>
+                        </div>
+                        <div class="game-body">
+                            <p>Perfeito para treinar raciocínio rápido e competir com amigos em provas de inteligência.</p>
+                            <div class="game-meta">
+                                <span class="badge">Puzzle</span>
+                                <a href="#" class="game-link">Jogar</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="features" style="margin-top: 4rem;">
+                <div class="section-heading">
+                    <h2>Por que escolher este portal?</h2>
+                </div>
+                <div class="games-grid">
+                    <div class="game-card" style="background: rgba(73, 197, 182, 0.1); border-color: rgba(73, 197, 182, 0.2);">
+                        <div class="game-body">
+                            <h3 style="color: var(--cyan);">Interface moderna</h3>
+                            <p>Layout limpo e fácil de navegar, com visual atraente para jogadores de todas as idades.</p>
+                        </div>
+                    </div>
+                    <div class="game-card" style="background: rgba(85, 126, 255, 0.1); border-color: rgba(85, 126, 255, 0.2);">
+                        <div class="game-body">
+                            <h3 style="color: var(--blue);">Acessível em dispositivos</h3>
+                            <p>Compatível com computador, tablet e celular. Jogue onde quiser.</p>
+                        </div>
+                    </div>
+                    <div class="game-card" style="background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.12);">
+                        <div class="game-body">
+                            <h3 style="color: var(--white);">Seleção variada</h3>
+                            <p>Jogos de corrida, aventura, arcade e puzzle. Diversão garantida para todo estilo.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer id="contact">
+            <p>Pronto para começar a jogar? Fale comigo e vamos lançar seu portal!</p>
+            <p style="margin-top: 1rem; color: var(--blue-soft);">Email: caroline@email.com</p>
+        </footer>
+    </div>
+</body>
+</html>
