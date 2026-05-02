@@ -349,7 +349,7 @@
             place-items: center;
             border-radius: 24px;
             backface-visibility: hidden;
-            font-size: 2.2rem;
+            font-size: 3rem;
             font-weight: 700;
         }
 
@@ -488,6 +488,7 @@
                             <span>Tempo: <strong id="timer">00:00</strong></span>
                             <span style="margin-left: 1.5rem;">Tentativas: <strong id="moves">0</strong></span>
                             <span style="margin-left: 1.5rem;">Pares: <strong id="matches">0</strong>/10</span>
+                            <span style="margin-left: 1.5rem;">Pontuação: <strong id="score">1000</strong></span>
                         </div>
                         <button class="button-primary" id="restart">Reiniciar</button>
                     </div>
@@ -602,6 +603,7 @@
         let lockBoard = false;
         let matches = 0;
         let moves = 0;
+        let score = 1000;
         let seconds = 0;
         let timerInterval = null;
 
@@ -609,6 +611,7 @@
         const timer = document.getElementById('timer');
         const movesEl = document.getElementById('moves');
         const matchesEl = document.getElementById('matches');
+        const scoreEl = document.getElementById('score');
         const message = document.getElementById('memoryMessage');
         const restart = document.getElementById('restart');
 
@@ -669,7 +672,9 @@
 
             secondCard = this;
             moves += 1;
+            score = Math.max(0, score - 15);
             movesEl.textContent = moves;
+            scoreEl.textContent = score;
             checkForMatch();
         }
 
@@ -682,12 +687,14 @@
             firstCard.classList.add('matched');
             secondCard.classList.add('matched');
             matches += 1;
+            score += 45;
             matchesEl.textContent = matches;
+            scoreEl.textContent = score;
             resetBoardState();
 
             if (matches === icons.length) {
                 clearInterval(timerInterval);
-                message.textContent = `Parabéns! Você venceu em ${formatTime(seconds)} com ${moves} tentativas.`;
+                message.textContent = `Parabéns! Você venceu em ${formatTime(seconds)} com ${moves} tentativas e ${score} pontos.`;
             }
         }
 
@@ -707,10 +714,12 @@
             lockBoard = false;
             matches = 0;
             moves = 0;
+            score = 1000;
             seconds = 0;
             timer.textContent = '00:00';
             movesEl.textContent = '0';
             matchesEl.textContent = '0';
+            scoreEl.textContent = score;
             message.textContent = '';
             setupBoard();
             startTimer();
