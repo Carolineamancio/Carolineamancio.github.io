@@ -338,6 +338,68 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
+        .hangman-section {
+            margin-top: 4rem;
+            padding: 2rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 32px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.12);
+        }
+
+        .hangman-board {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .hangman-message {
+            color: var(--cyan);
+            font-weight: 700;
+            font-size: 1rem;
+            min-height: 1.5rem;
+        }
+
+        .hangman-keyboard {
+            display: grid;
+            grid-template-columns: repeat(13, minmax(0, 1fr));
+            gap: 0.5rem;
+        }
+
+        .letter-button {
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.08);
+            color: var(--white);
+            border-radius: 999px;
+            padding: 0.9rem 0.5rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .letter-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .letter-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .hangman-word {
+            display: inline-flex;
+            gap: 0.8rem;
+            color: var(--white);
+            font-size: 1.05rem;
+            letter-spacing: 0.14em;
+        }
+
+        .hangman-chances {
+            color: var(--cyan);
+            font-weight: 700;
+        }
+
+
         .memory-card.flipped .memory-card-inner {
             transform: rotateY(180deg);
         }
@@ -561,6 +623,42 @@
                             </div>
                         </div>
                     </article>
+
+                    <article class="game-card">
+                        <div class="game-top">
+                            <h3>Forca</h3>
+                            <p>Adivinhe a palavra antes que o personagem seja enforcado.</p>
+                        </div>
+                        <div class="game-body">
+                            <p>Um clássico de 10 palavras para testar sua atenção e vocabulário.</p>
+                            <div class="game-meta">
+                                <span class="badge">Clássico</span>
+                                <a href="#hangman" class="game-link">Jogar</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="hangman" class="hangman-section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Jogo da Forca</h2>
+                    </div>
+                    <p>Escolha letras para adivinhar a palavra secreta. Você tem 6 tentativas antes do jogo terminar.</p>
+                </div>
+                <div class="memory-info">
+                    <div class="memory-panel">
+                        <div>
+                            <span>Chances: <strong id="hangmanChances">6</strong></span>
+                            <span style="margin-left: 1.5rem;">Palavra: <strong id="hangmanWord">_ _ _ _ _</strong></span>
+                        </div>
+                        <button class="button-primary" id="hangmanRestart">Reiniciar</button>
+                    </div>
+                    <div class="hangman-board">
+                        <div class="hangman-message" id="hangmanMessage"></div>
+                        <div class="hangman-keyboard" id="hangmanKeyboard"></div>
+                    </div>
                 </div>
             </section>
 
@@ -614,6 +712,17 @@
         const scoreEl = document.getElementById('score');
         const message = document.getElementById('memoryMessage');
         const restart = document.getElementById('restart');
+
+        const hangmanWords = ['CACHORRO', 'FUTEBOL', 'ESPELHO', 'TECLADO', 'VIAGEM', 'PLANETA', 'ALEGRE', 'MONTANHA', 'MUSEU', 'JARDIM'];
+        let selectedWord = '';
+        let guessedLetters = [];
+        let remainingChances = 6;
+        const hangmanWordEl = document.getElementById('hangmanWord');
+        const hangmanKeyboard = document.getElementById('hangmanKeyboard');
+        const hangmanMessage = document.getElementById('hangmanMessage');
+        const hangmanChances = document.getElementById('hangmanChances');
+        const hangmanRestart = document.getElementById('hangmanRestart');
+
 
         function shuffle(array) {
             return array.sort(() => Math.random() - 0.5);
@@ -725,9 +834,62 @@
             startTimer();
         }
 
+        function chooseHangmanWord() {
+            selectedWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
+            guessedLetters = [];
+            remainingChances = 6;
+            hangmanChances.textContent = remainingChances;
+            hangmanMessage.textContent = '';
+            updateHangmanWord();
+            renderHangmanKeyboard();
+        }
+
+        function updateHangmanWord() {
+            const display = selectedWord.split('').map(letter => guessedLetters.includes(letter) ? letter : '_').join(' ');
+            hangmanWordEl.textContent = display;
+            return display;
+        }
+
+        function renderHangmanKeyboard() {
+            hangmanKeyboard.innerHTML = '';
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+            alphabet.forEach(letter => {
+                const button = document.createElement('button');
+                button.className = 'letter-button';
+                button.type = 'button';
+                button.textContent = letter;
+                button.disabled = guessedLetters.includes(letter) || remainingChances === 0 || updateHangmanWord().indexOf('_') === -1;
+                button.addEventListener('click', () => guessLetter(letter, button));
+                hangmanKeyboard.appendChild(button);
+            });
+        }
+
+        function guessLetter(letter, button) {
+            button.disabled = true;
+            if (!selectedWord.includes(letter)) {
+                remainingChances -= 1;
+                hangmanChances.textContent = remainingChances;
+                hangmanMessage.textContent = 'Letra incorreta! Tente outra.';
+            } else {
+                hangmanMessage.textContent = 'Boa! Continue assim.';
+            }
+
+            guessedLetters.push(letter);
+            const display = updateHangmanWord();
+            renderHangmanKeyboard();
+
+            if (display.indexOf('_') === -1) {
+                hangmanMessage.textContent = 'Parabéns! Você acertou a palavra!';
+            } else if (remainingChances <= 0) {
+                hangmanMessage.textContent = `Fim de jogo! A palavra era ${selectedWord}.`;
+            }
+        }
+
+        hangmanRestart.addEventListener('click', chooseHangmanWord);
         restart.addEventListener('click', resetGame);
         setupBoard();
         startTimer();
+        chooseHangmanWord();
     </script>
 </body>
 </html>
