@@ -46,7 +46,8 @@
 <h1>🐍 Snake</h1>
 <canvas id="game" width="400" height="400"></canvas>
 <p>Use as setas do teclado</p>
-<button id="resetBtn" onclick="resetGame()">Reiniciar Jogo</button>
+<button id="startBtn" onclick="startGame()">Iniciar Jogo</button>
+<button id="resetBtn" onclick="resetGame()" style="display: none;">Reiniciar Jogo</button>
 
 <script>
 const canvas = document.getElementById("game");
@@ -55,21 +56,33 @@ const ctx = canvas.getContext("2d");
 const box = 20;
 let snake = [{x: 200, y: 200}];
 let direction = "RIGHT";
-let gameRunning = true;
+let gameRunning = false;
+let gameInterval;
 
 let food = {
   x: Math.floor(Math.random() * 20) * box,
   y: Math.floor(Math.random() * 20) * box
 };
 
+function startGame() {
+  if (gameRunning) return;
+  gameRunning = true;
+  gameInterval = setInterval(draw, 120);
+  document.getElementById("startBtn").style.display = "none";
+  document.getElementById("resetBtn").style.display = "inline-block";
+}
+
 function resetGame() {
+  clearInterval(gameInterval);
   snake = [{x: 200, y: 200}];
   direction = "RIGHT";
   food = {
     x: Math.floor(Math.random() * 20) * box,
     y: Math.floor(Math.random() * 20) * box
   };
-  gameRunning = true;
+  gameRunning = false;
+  document.getElementById("startBtn").style.display = "inline-block";
+  document.getElementById("resetBtn").style.display = "none";
 }
 
 document.addEventListener("keydown", (event) => {
@@ -119,15 +132,18 @@ function draw() {
     snakeX >= 400 || snakeY >= 400 ||
     snake.some(segment => segment.x === snakeX && segment.y === snakeY)
   ) {
+    clearInterval(gameInterval);
     gameRunning = false;
     alert("Game Over 😢");
+    document.getElementById("startBtn").style.display = "inline-block";
+    document.getElementById("resetBtn").style.display = "none";
     return;
   }
 
   snake.unshift(newHead);
 }
 
-setInterval(draw, 120);
+// setInterval(draw, 120);
 </script>
 
 </body>
