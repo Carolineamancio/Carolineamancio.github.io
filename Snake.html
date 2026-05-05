@@ -24,6 +24,21 @@
     h1 {
       margin-bottom: 10px;
     }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #38bdf8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #0ea5e9;
+    }
   </style>
 </head>
 <body>
@@ -31,6 +46,7 @@
 <h1>🐍 Snake</h1>
 <canvas id="game" width="400" height="400"></canvas>
 <p>Use as setas do teclado</p>
+<button id="resetBtn" onclick="resetGame()">Reiniciar Jogo</button>
 
 <script>
 const canvas = document.getElementById("game");
@@ -39,13 +55,25 @@ const ctx = canvas.getContext("2d");
 const box = 20;
 let snake = [{x: 200, y: 200}];
 let direction = "RIGHT";
+let gameRunning = true;
 
 let food = {
   x: Math.floor(Math.random() * 20) * box,
   y: Math.floor(Math.random() * 20) * box
 };
 
+function resetGame() {
+  snake = [{x: 200, y: 200}];
+  direction = "RIGHT";
+  food = {
+    x: Math.floor(Math.random() * 20) * box,
+    y: Math.floor(Math.random() * 20) * box
+  };
+  gameRunning = true;
+}
+
 document.addEventListener("keydown", (event) => {
+  if (!gameRunning) return;
   if (event.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
   if (event.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
   if (event.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
@@ -53,6 +81,8 @@ document.addEventListener("keydown", (event) => {
 });
 
 function draw() {
+  if (!gameRunning) return;
+
   ctx.fillStyle = "#020617";
   ctx.fillRect(0, 0, 400, 400);
 
@@ -89,8 +119,9 @@ function draw() {
     snakeX >= 400 || snakeY >= 400 ||
     snake.some(segment => segment.x === snakeX && segment.y === snakeY)
   ) {
+    gameRunning = false;
     alert("Game Over 😢");
-    document.location.reload();
+    return;
   }
 
   snake.unshift(newHead);
