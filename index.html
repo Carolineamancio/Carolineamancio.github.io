@@ -1,77 +1,96 @@
 <!DOCTYPE html>
+<!-- Declara que este arquivo é um documento HTML5 -->
 <html lang="pt-BR">
-<head>
+<!-- Inicia o elemento root do HTML e define o idioma como Português do Brasil -->
+<head> <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/686/686589.png">
   <meta charset="UTF-8">
+  <!-- Define a codificação de caracteres como UTF-8 -->
   <title>Meu Portal de Jogos</title>
+  <!-- Define o título que aparece na aba do navegador -->
   <style>
+    /* Estilos para o corpo da página */
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      text-align: center;
+      margin: 0; /* Remove a margem padrão do navegador */
+      font-family: Arial, sans-serif; /* Define a fonte usada na página */
+      background: #0f172a; /* Define a cor de fundo da página */
+      color: white; /* Define a cor padrão do texto como branco */
+      text-align: center; /* Alinha todo o texto ao centro */
     }
 
+    /* Estilos para o cabeçalho da página */
     header {
-      padding: 20px;
-      background: #1e293b;
-      font-size: 24px;
-      font-weight: bold;
+      padding: 20px; /* Espaçamento interno ao redor do texto do cabeçalho */
+      background: #1e293b; /* Cor de fundo do cabeçalho */
+      font-size: 24px; /* Tamanho da fonte do cabeçalho */
+      font-weight: bold; /* Texto em negrito no cabeçalho */
     }
 
+    /* Estilos para o contêiner que agrupa os jogos */
     .games {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      padding: 20px;
+      display: grid; /* Usa layout de grade para os cartões de jogos */
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Define colunas flexíveis */
+      gap: 20px; /* Espaçamento entre os cartões */
+      padding: 20px; /* Espaçamento interno do contêiner */
     }
 
+    /* Estilos para cada cartão de jogo */
     .card {
-      background: #1e293b;
-      border-radius: 12px;
-      padding: 15px;
-      transition: 0.3s;
+      background: #1e293b; /* Cor de fundo do cartão */
+      border-radius: 12px; /* Cantos arredondados no cartão */
+      padding: 15px; /* Espaçamento interno do cartão */
+      transition: 0.3s; /* Animação suave ao passar o mouse */
     }
 
+    /* Estilos aplicados quando o cursor passa sobre o cartão */
     .card:hover {
-      transform: scale(1.05);
-      background: #334155;
+      transform: scale(1.05); /* Aumenta levemente o cartão */
+      background: #334155; /* Muda a cor de fundo do cartão */
     }
 
+    /* Estilos para os iframes que incorporam os jogos */
     iframe {
-      width: 100%;
-      height: 150px;
-      border: none;
-      border-radius: 8px;
+      width: 100%; /* Largura total do contêiner pai */
+      height: 150px; /* Altura fixa do iframe */
+      border: none; /* Remove a borda padrão do iframe */
+      border-radius: 8px; /* Cantos arredondados no iframe */
     }
 
+    /* Estilos para os links de jogar */
     a {
-      display: block;
-      margin-top: 10px;
-      color: #38bdf8;
-      text-decoration: none;
+      display: block; /* Faz o link ocupar uma linha inteira */
+      margin-top: 10px; /* Espaço acima do link */
+      color: #38bdf8; /* Cor do texto do link */
+      text-decoration: none; /* Remove o sublinhado do link */
     }
   </style>
 </head>
 <body>
 
-<header>🎮 Meu Portal de Jogos</header>
+<header>🎮 Games</header>
+<!-- Cabeçalho principal com o título do portal -->
 
 <div class="games">
+<!-- Contêiner que agrupa todos os cards de jogos -->
 
   <div class="card">
-    <iframe src="https://www.crazygames.com/embed/slope"></iframe>
-    <a href="https://www.crazygames.com/game/slope" target="_blank">Jogar Slope</a>
+    <!-- Primeiro cartão de jogo -->
+   <img src="https://via.placeholder.com/200x150" alt="Jogo" style="width:100%; border-radius:8px;">
   </div>
 
   <div class="card">
+    <!-- Segundo cartão de jogo -->
     <iframe src="https://www.crazygames.com/embed/moto-x3m"></iframe>
+    <!-- Incorpora o jogo Moto X3M via iframe -->
     <a href="https://www.crazygames.com/game/moto-x3m" target="_blank">Jogar Moto X3M</a>
+    <!-- Link que abre o jogo Moto X3M em nova aba -->
   </div>
 
   <div class="card">
+    <!-- Terceiro cartão de jogo -->
     <iframe src="https://www.crazygames.com/embed/2048"></iframe>
+    <!-- Incorpora o jogo 2048 via iframe -->
     <a href="https://www.crazygames.com/game/2048" target="_blank">Jogar 2048</a>
+    <!-- Link que abre o jogo 2048 em nova aba -->
   </div>
 
 </div>
