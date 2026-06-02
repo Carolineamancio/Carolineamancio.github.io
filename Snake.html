@@ -5,7 +5,7 @@
   <title>Snake - Games</title>
   <style>
     body {
-      background: #0f172a;
+      background: linear-gradient(180deg, #f7bd01 10%, #f58505 42%, #e9250b 100%);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -17,8 +17,8 @@
     }
 
     canvas {
-      background: #020617;
-      border: 2px solid #38bdf8;
+      background: #0ce217;
+      border: 2px solid #0d5a11;
     }
 
     h1 {
@@ -39,6 +39,19 @@
     button:hover {
       background: #0ea5e9;
     }
+
+    .container {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #score {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -46,8 +59,12 @@
 <h1>🐍 Snake</h1>
 <canvas id="game" width="400" height="400"></canvas>
 <p>Use as setas do teclado</p>
-<button id="startBtn" onclick="startGame()">Iniciar Jogo</button>
-<button id="resetBtn" onclick="resetGame()" style="display: none;">Reiniciar Jogo</button>
+<div id="score">Pontuação: 0</div>
+<div class="container">
+  <button id="startBtn" onclick="startGame()">Iniciar Jogo</button>
+  <button id="resetBtn" onclick="resetGame()" style="display: none;">Reiniciar Jogo</button>
+  <button onclick="window.location.href='index.html'">Voltar ao Portal</button>
+</div>
 
 <script>
 // Seleciona o canvas onde o jogo será desenhado
@@ -62,6 +79,7 @@ let snake = [{x: 200, y: 200}];
 let direction = "RIGHT"; // direção inicial
 let gameRunning = false; // flag para saber se o jogo está em andamento
 let gameInterval; // referência do temporizador de atualização
+let score = 0; // pontuação do jogo
 
 // Posição inicial da comida, gerada aleatoriamente dentro do tabuleiro
 let food = {
@@ -81,6 +99,8 @@ function resetGame() {
   clearInterval(gameInterval); // para o loop do jogo
   snake = [{x: 200, y: 200}]; // reinicia a cobra
   direction = "RIGHT"; // volta direção inicial
+  score = 0; // reseta a pontuação
+  document.getElementById("score").textContent = "Pontuação: 0";
   food = {
     x: Math.floor(Math.random() * 20) * box,
     y: Math.floor(Math.random() * 20) * box
@@ -103,7 +123,7 @@ function draw() {
   if (!gameRunning) return;
 
   // Limpa o canvas a cada frame
-  ctx.fillStyle = "#020617";
+  ctx.fillStyle = "#0d5a11";
   ctx.fillRect(0, 0, 400, 400);
 
   // Desenha cada parte da cobra
@@ -125,8 +145,16 @@ function draw() {
   if (direction === "LEFT") snakeX -= box;
   if (direction === "RIGHT") snakeX += box;
 
+  // Faz a cobra atravessar a borda e reaparecer do outro lado
+  if (snakeX < 0) snakeX = 380;
+  if (snakeX >= 400) snakeX = 0;
+  if (snakeY < 0) snakeY = 380;
+  if (snakeY >= 400) snakeY = 0;
+
   // Verifica se a cobra comeu a comida
   if (snakeX === food.x && snakeY === food.y) {
+    score++; // incrementa a pontuação
+    document.getElementById("score").textContent = "Pontuação: " + score;
     food = {
       x: Math.floor(Math.random() * 20) * box,
       y: Math.floor(Math.random() * 20) * box
@@ -137,12 +165,8 @@ function draw() {
 
   const newHead = {x: snakeX, y: snakeY};
 
-  // Verifica colisão com parede ou com o próprio corpo
-  if (
-    snakeX < 0 || snakeY < 0 ||
-    snakeX >= 400 || snakeY >= 400 ||
-    snake.some(segment => segment.x === snakeX && segment.y === snakeY)
-  ) {
+  // Verifica colisão apenas com o próprio corpo
+  if (snake.some(segment => segment.x === snakeX && segment.y === snakeY)) {
     clearInterval(gameInterval);
     gameRunning = false;
     alert("Game Over 😢");
