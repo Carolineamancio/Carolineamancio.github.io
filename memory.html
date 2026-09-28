@@ -91,6 +91,12 @@
       opacity: 0.95;
     }
 
+    .back-link {
+      width: auto;
+      margin: 0 0 18px;
+      padding: 10px 16px;
+    }
+
     .message {
       margin-top: 12px;
       min-height: 24px;
@@ -102,6 +108,7 @@
 </head>
 <body>
   <div class="game">
+    <a class="back-link" href="index.html#projetos">← Voltar aos jogos</a>
     <h1>Jogo da Memória</h1>
 
     <!-- Área onde mostramos movimentos e pares acertados -->
@@ -114,7 +121,6 @@
     <div class="board" id="board"></div>
 
     <button id="restart" type="button">Reiniciar</button>
-    <a class="back-link" href="index.html">Voltar ao Portal</a>
     <p class="message" id="message"></p>
   </div>
 

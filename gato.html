@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo do Gato</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 72px 16px 32px;
+      display: grid;
+      place-items: center;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #fff7ff;
+      background: linear-gradient(135deg, #14081f, #4f1d66);
+    }
+    .back-link {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      color: white;
+      background: #3e1855;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .game {
+      width: min(420px, 100%);
+      padding: 28px;
+      border-radius: 24px;
+      text-align: center;
+      background: rgba(26, 12, 45, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+    }
+    h1 { margin: 0 0 8px; }
+    #status { min-height: 24px; margin: 0 0 20px; color: #f9cbff; }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .cell {
+      aspect-ratio: 1;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 16px;
+      background: #3e1855;
+      color: #ff8fd3;
+      font-size: clamp(2.5rem, 14vw, 4rem);
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .cell:nth-child(even) { color: #c7a4ff; }
+    .cell:focus-visible, button:focus-visible, a:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 3px;
+    }
+    .cell:disabled { cursor: default; }
+    #restart {
+      margin-top: 22px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff5fa2, #9b5cff);
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="index.html#projetos">← Voltar aos jogos</a>
+  <main class="game">
+    <h1>Jogo do Gato</h1>
+    <p id="status" role="status" aria-live="polite">Vez de X</p>
+    <div class="board" id="board" aria-label="Tabuleiro do jogo"></div>
+    <button id="restart" type="button">Novo jogo</button>
+  </main>
+  <script>
+    const board = document.getElementById('board');
+    const status = document.getElementById('status');
+    const winningLines = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+    let cells;
+    let player;
+    let finished;
+
+    function startGame() {
+      cells = Array(9).fill('');
+      player = 'X';
+      finished = false;
+      status.textContent = 'Vez de X';
+      board.replaceChildren();
+      cells.forEach((_, index) => {
+        const button = document.createElement('button');
+        button.className = 'cell';
+        button.type = 'button';
+        button.setAttribute('aria-label', `Casa ${index + 1}`);
+        button.addEventListener('click', () => play(index, button));
+        board.appendChild(button);
+      });
+    }
+
+    function play(index, button) {
+      if (finished || cells[index]) return;
+      cells[index] = player;
+      button.textContent = player;
+      button.setAttribute('aria-label', `Casa ${index + 1}: ${player}`);
+      button.disabled = true;
+
+      if (winningLines.some(line => line.every(position => cells[position] === player))) {
+        status.textContent = `${player} venceu!`;
+        finished = true;
+      } else if (cells.every(Boolean)) {
+        status.textContent = 'Empate!';
+        finished = true;
+      } else {
+        player = player === 'X' ? 'O' : 'X';
+        status.textContent = `Vez de ${player}`;
+      }
+    }
+
+    document.getElementById('restart').addEventListener('click', startGame);
+    startGame();
+  </script>
+</body>
+</html>
