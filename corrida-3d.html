@@ -372,12 +372,13 @@
         clearBehind(traffic);
         clearBehind(obstacles);
       }
-      camera.position.lerp(new THREE.Vector3(player.position.x, 5.5, playerZ + 11), .09);
+      camera.position.x += (player.position.x - camera.position.x) * Math.min(1, dt * 8);
+      camera.position.z = playerZ + 10;
       camera.lookAt(roadCenter(playerZ - 25) + playerOffset * .35, 1, playerZ - 25);
       renderer.render(scene, camera);
     }
     player.position.set(roadCenter(playerZ), 0, playerZ);
-    camera.position.set(player.position.x, 5.5, playerZ + 11);
+    camera.position.set(player.position.x, 5.5, playerZ + 10);
     animate();
     addEventListener('resize', () => {
       camera.aspect = innerWidth / innerHeight;
