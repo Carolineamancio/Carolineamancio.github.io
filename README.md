@@ -43,6 +43,7 @@ Galeria com os principais jogos desenvolvidos:
 - **Jogo da Memória** - Desafio de concentração
 - **Jogo da Forca** - Adivinhação de palavras
 - **Jogo do Gato** - Estratégia para dois jogadores
+- **Corrida 3D** - Corrida com curvas, tráfego e obstáculos variados
 
 ### 📬 Contato
 Seção com call-to-action para entrar em contato e link para o GitHub.
@@ -100,6 +101,8 @@ Carolineamancio.github.io/
 ├── Snake.html              # Jogo Snake
 ├── memory.html             # Jogo da Memória
 ├── forca.html              # Jogo da Forca
+├── gato.html               # Jogo do Gato
+├── corrida-3d.html         # Corrida 3D
 ├── README.md               # Este arquivo
 └── .git/                   # Histórico do Git
 ```
